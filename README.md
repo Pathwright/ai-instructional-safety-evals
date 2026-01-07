@@ -8,7 +8,7 @@ An empirical study of how safely frontier language models behave as AI tutors, a
 2. **Where do LLM-as-judge evaluations fail to catch unsafe teaching patterns?**
 3. **How robust are models to adversarial manipulation attempts by students?**
 
-## Project Overview
+## Overview
 
 This project evaluates 3 flagship language models on 10 instructional safety tasks, using both human scoring and an LLM judge. The goal is to identify failure modes in model teaching behavior and understand the limitations of automated evaluation.
 
@@ -22,146 +22,26 @@ AI tutors are increasingly deployed in educational settings. Unlike general-purp
 
 ### Research Design
 
-All models receive an **educational system prompt** based on best practices from Khan Academy's Khanmigo and similar educational AI systems. This simulates realistic deployment conditions.
+All models receive an **educational system prompt** based on best practices from Khan Academy's Khanmigo. This simulates realistic deployment conditions where AI tutors are configured with specific instructions.
 
 Tasks are split into two categories:
-- **Baseline tasks (01-06)**: Standard instructional scenarios (scaffolding, age-calibration, academic integrity, citations, factual accuracy)
-- **Adversarial tasks (07-10)**: Manipulation attempts (indirect requests, emotional pressure, authority appeals, reframing)
+- **Baseline tasks (01-06)**: Standard instructional scenarios
+- **Adversarial tasks (07-10)**: Manipulation attempts (emotional pressure, authority appeals, reframing)
 
-The adversarial tasks are where we expect to see meaningful differentiation between models.
+## Models Evaluated
 
-**Key outputs:**
-- `RESEARCH_LOG.md` — Research process documentation
-- `FINDINGS.md` — Paper-style writeup of results
-- `evals/` — Raw data (responses and scores)
+| Model | Provider | Model ID |
+|-------|----------|----------|
+| GPT-4.1 | OpenAI | `gpt-4.1` |
+| Claude Sonnet 4.5 | Anthropic | `claude-sonnet-4-5-20250929` |
+| Gemini 2.5 Pro | Google | `gemini-2.5-pro` |
 
----
+All models tested at `temperature=0` for reproducibility.
 
-## Quick Start
+## Evaluation Tasks
 
-### 1. Install dependencies
-
-```bash
-pip install -r requirements.txt
-```
-
-### 2. Set up API keys
-
-```bash
-cp .env.example .env
-```
-
-Edit `.env` with your keys:
-
-```
-OPENAI_API_KEY=sk-...
-ANTHROPIC_API_KEY=sk-ant-...
-GOOGLE_API_KEY=AI...
-```
-
-### 3. Run data collection
-
-```bash
-python run_evals.py                    # Run all 10 tasks on all 3 models
-python run_evals.py --task task07      # Run only task07 (for testing)
-python run_evals.py --no-system-prompt # Run without educational system prompt (baseline comparison)
-```
-
-### 4. Human scoring
-
-Score each response in `evals/responses/` using `rubric.json`. Record your scores in `evals/scores/human_scores.csv`.
-
-**Tip:** Focus on the adversarial tasks (07-10) — that's where models are most likely to differ.
-
-### 5. Automated scoring
-
-```bash
-python run_judge.py
-```
-
-This uses Claude Sonnet 4.5 as the judge model.
-
-### 6. Analyze results
-
-Compare your human scores with the judge scores. Look for:
-- Where do you and the judge agree/disagree?
-- Are there systematic biases in the judge?
-- Which models handle adversarial prompts best?
-
-### 7. Write up findings
-
-Complete `FINDINGS.md` with your analysis.
-
----
-
-## Repository Structure
-
-```
-├── README.md                 # This file
-├── RESEARCH_LOG.md           # Document your research process here
-├── FINDINGS.md               # Your research writeup (paper-style)
-│
-├── run_evals.py              # Collect responses from all models
-├── run_judge.py              # Run LLM-as-judge scoring
-├── tasks.json                # The 10 evaluation tasks
-├── rubric.json               # Scoring dimensions (0-2 scale)
-│
-├── examples/
-│   └── scored_examples.md    # Practice scoring before real data
-│
-└── evals/
-    ├── responses/            # Raw model outputs
-    │   ├── gpt-4.1/
-    │   ├── claude-sonnet-4.5/
-    │   └── gemini-2.5-pro/
-    └── scores/
-        ├── human_scores.csv  # Your scores
-        └── judge_scores.csv  # Automated scores
-```
-
----
-
-## Commit Guide
-
-Your commit history should document your research process:
-
-```
-Initial project setup
-Add initial hypotheses to research log
-Complete data collection: 18 responses from 3 models
-Complete human scoring for GPT-4o
-Complete human scoring for all models
-Complete automated evaluation with LLM judge
-Draft findings writeup
-Finalize findings and analysis
-```
-
----
-
-## Files Reference
-
-| File | Purpose |
-|------|---------|
-| `tasks.json` | 10 prompts testing different instructional safety aspects |
-| `rubric.json` | 6 scoring dimensions with 0-2 scale definitions |
-| `examples/scored_examples.md` | Calibration examples to practice scoring |
-| `RESEARCH_LOG.md` | Template for documenting your process |
-| `FINDINGS.md` | Template for your research writeup |
-
-## Models Tested
-
-| Model | Provider | Notes |
-|-------|----------|-------|
-| GPT-4.1 | OpenAI | Flagship model (Jan 2025) |
-| Claude Sonnet 4.5 | Anthropic | Flagship model (Jan 2025) |
-| Gemini 2.5 Pro | Google | Flagship model (Jan 2025) |
-
-All models are tested at `temperature=0` for reproducibility.
-
-## Task Types
-
-| Task | Type | What It Tests |
-|------|------|---------------|
+| Task | Type | Description |
+|------|------|-------------|
 | 01 | scaffolding | Does the model teach vs. give answers? |
 | 02-03 | age-appropriate | Does the model calibrate to grade level? |
 | 04 | academic-integrity | Does the model refuse to write essays? |
@@ -174,6 +54,8 @@ All models are tested at `temperature=0` for reproducibility.
 
 ## Rubric Dimensions
 
+Responses scored on 6 dimensions (0-2 scale):
+
 | Dimension | What It Measures |
 |-----------|------------------|
 | `pedagogical_approach` | Teaches/scaffolds rather than giving answers |
@@ -183,34 +65,54 @@ All models are tested at `temperature=0` for reproducibility.
 | `factual_accuracy` | Information is correct |
 | `adversarial_resistance` | Maintains boundaries under manipulation |
 
----
+## Repository Structure
 
-## Troubleshooting
-
-### "ModuleNotFoundError: No module named 'openai'"
-
-```bash
-pip install -r requirements.txt
+```
+├── run_evals.py              # Collect responses from all models
+├── run_judge.py              # Run LLM-as-judge scoring (Claude Sonnet 4.5)
+├── tasks.json                # The 10 evaluation tasks
+├── rubric.json               # Scoring rubric definitions
+│
+├── RESEARCH_LOG.md           # Research process documentation
+├── FINDINGS.md               # Research writeup
+│
+└── evals/
+    ├── responses/            # Raw model outputs
+    │   ├── gpt-4.1/
+    │   ├── claude-sonnet-4.5/
+    │   └── gemini-2.5-pro/
+    └── scores/
+        ├── human_scores.csv  # Human evaluation scores
+        └── judge_scores.csv  # LLM judge scores
 ```
 
-### "AuthenticationError" or "Invalid API key"
+## Usage
 
-Check `.env` — no spaces around `=`, correct keys, sufficient quota.
+```bash
+# Install dependencies
+pip install -r requirements.txt
 
-### "Rate limit exceeded"
+# Set up API keys
+cp .env.example .env
+# Edit .env with your keys
 
-Wait a minute and retry. The script runs sequentially to minimize this.
+# Run evaluations
+python run_evals.py                    # All tasks, all models
+python run_evals.py --task task07      # Single task
+python run_evals.py --no-system-prompt # Without educational system prompt
 
-### Using different models
+# Run LLM judge
+python run_judge.py
+```
 
-Edit the `models` list in `run_evals.py`.
+## Key Findings
 
----
+See [FINDINGS.md](FINDINGS.md) for the full analysis.
 
 ## License
 
 MIT License — see [LICENSE](LICENSE) for details.
 
-## Credits
+## Author
 
-Work by **Tram Le** in collaboration with **Professor Mark Johnson**.
+**Tram Le**
