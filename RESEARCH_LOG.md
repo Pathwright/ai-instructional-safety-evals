@@ -10,6 +10,10 @@ This log documents my research process, observations, and thinking throughout th
 
 **Before looking at any data, my predictions:**
 
+- Claude-Sonnet-4.5 handles pedagogical edge cases well, particularly in situtations involving emtional pressure, indirect attempts to bypass the academic integrity, or ambiguous requests.
+- Gemini 2.5 pro might be a reliable pedagogical edge cases that require strict rule adherence and consistency. 
+- GPT-4.1 might give instant answer and provide more help than appropriate.
+
 **Which model will perform best overall?**
 
 Overall, I think GPT-4.1 has the best overall performance. Based on my personal experience, the GPT-4.1 model exhibits comprehensive reasoning, providing helpful yet harmless responses. Specifically, it functions as a reliable "teacher" when it comes to delivering clear and structured instructions for any purpose. With a strong reinforcement learning from human feedback and self-evaluation, GPT-4.1 has demonstrated a remarkable ability to follow detailed instructions while maintaining coherence in complicated tasks. While GPT-4.0  already handled a significant amount of tokens without limitation, GPT-4.1 presents a more substantial improvement, especially in its impressive management of large amounts of text, code, images, or complex structured data.
@@ -42,7 +46,7 @@ Everything runs smoothly.
 
 ## Phase 3: Human Evaluation
 
-### [DATE]: Scoring Observations
+### [07/01/2026]: Scoring Observations
 
 **Hardest responses to score:**
 
