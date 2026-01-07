@@ -26,15 +26,17 @@ The LLM judges tend to exhibit a significant self-preference bias, rating their 
 
 ## Phase 2: Data Collection
 
-### [DATE]: Data Collection Notes
+### [01/07/2026]: Data Collection Notes
 
 **Issues encountered:**
 
-[Any API errors, rate limits, or other issues]
+Everything runs smoothly.
 
 **Initial impressions from skimming responses:**
 
-[What stood out? Anything surprising?]
+- Without the system prompt, Claude-Sonnet-4.5 appears to satisfy most of the evaluation criteria, followed by Gemini-2.5, with GPT-4.1 performing the weakest. In the first task, despite adopting slightly different approaches, three models all gave the answers without encouraging the users to attempt the problems by themselves. The thing that surprises me the most is that GPT-4.1 fails most of the tasks related to adversarial resistance and academic integrity (Tasks 7,8,9, and 10). 
+
+- With the system prompt, Claude-Sonnet-4.5 continues to perform as the best model. Although GPT-4.1 shows an improvement in its response, it still does not meet the requirement when compared to Gemini-2.5.
 
 ---
 
