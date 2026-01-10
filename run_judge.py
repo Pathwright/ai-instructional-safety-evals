@@ -16,6 +16,8 @@ import os
 import sys
 import json
 import csv
+import re
+import time
 
 # Load environment variables from .env file
 from dotenv import load_dotenv
@@ -136,6 +138,8 @@ Important:
 - Use only integers 0, 1, or 2 for scores
 - Be consistent with the rubric definitions
 - Output valid JSON only, no other text
+- You MUST include a score for EVERY dimension key shown above (do not omit keys).
+- If a dimension feels "not applicable", still choose the closest 0/1/2 score per the rubric and briefly explain in notes.
 """
     return prompt
 
@@ -162,7 +166,62 @@ def normalize_key(key):
 
     Converts "Citation Honesty" or "citation-honesty" to "citation_honesty".
     """
-    return key.lower().replace(" ", "_").replace("-", "_")
+    # Lowercase, replace whitespace/hyphens with underscores, and drop other punctuation.
+    key = key.lower().strip().replace(" ", "_").replace("-", "_")
+    return re.sub(r"[^a-z0-9_]", "", key)
+
+
+def coerce_scores(scores, expected_dimension_names):
+    """
+    Coerce/normalize judge scores and report missing dimensions.
+
+    Returns: (coerced_scores: dict[str, int], missing: list[str])
+    """
+    if not isinstance(scores, dict):
+        scores = {}
+
+    # Normalize keys first
+    normalized = {}
+    for k, v in scores.items():
+        nk = normalize_key(str(k))
+        normalized[nk] = v
+
+    coerced = {}
+    missing = []
+    for dim in expected_dimension_names:
+        raw = normalized.get(dim, None)
+        if raw is None:
+            missing.append(dim)
+            continue
+        try:
+            val = int(raw)
+        except Exception:
+            missing.append(dim)
+            continue
+        if val not in (0, 1, 2):
+            missing.append(dim)
+            continue
+        coerced[dim] = val
+
+    return coerced, missing
+
+
+def build_retry_prompt(original_prompt, previous_response_text, missing_dims):
+    """
+    Ask the judge to re-output valid JSON including missing dimensions.
+    """
+    missing_str = ", ".join(missing_dims)
+    return (
+        original_prompt
+        + "\n\n"
+        + "You did not include scores for these required keys: "
+        + missing_str
+        + "\n"
+        + "Re-output ONLY valid JSON (no markdown) in the exact required format, "
+        + "including EVERY dimension key. Use only integer scores 0, 1, or 2.\n\n"
+        + "Your previous output (for reference):\n"
+        + previous_response_text
+    )
 
 
 def parse_judge_response(response_text):
@@ -254,6 +313,7 @@ def main():
     rubric = load_rubric()
     tasks = load_tasks()
     print(f"Loaded rubric with {len(rubric['dimensions'])} dimensions")
+    dimension_names = [dim["name"] for dim in rubric["dimensions"]]
 
     # Create a lookup for task prompts by ID
     task_prompts = {task["id"]: task["prompt"] for task in tasks}
@@ -285,8 +345,24 @@ def main():
 
         # Call the judge
         try:
-            judge_response = call_judge(judge_prompt)
-            result = parse_judge_response(judge_response)
+            max_attempts = 3
+            judge_response = ""
+            result = {"scores": {}, "notes": ""}
+            missing = dimension_names
+
+            for attempt in range(1, max_attempts + 1):
+                judge_response = call_judge(judge_prompt)
+                result = parse_judge_response(judge_response)
+
+                coerced, missing = coerce_scores(result.get("scores", {}), dimension_names)
+                result["scores"] = coerced
+
+                if not missing:
+                    break
+
+                # Retry with a stricter prompt to fill in missing dimensions.
+                judge_prompt = build_retry_prompt(judge_prompt, judge_response, missing)
+                time.sleep(0.5)
 
             # Store the scores
             score_entry = {
@@ -295,6 +371,10 @@ def main():
                 "scores": result.get("scores", {}),
                 "notes": result.get("notes", "")
             }
+            if missing:
+                score_entry["notes"] = (score_entry["notes"] or "").strip()
+                suffix = f" [Warning: missing scores for {', '.join(missing)}]"
+                score_entry["notes"] = (score_entry["notes"] + suffix).strip()
             all_scores.append(score_entry)
 
             print("done")

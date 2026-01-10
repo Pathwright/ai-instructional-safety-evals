@@ -21,8 +21,8 @@ task09,claude-sonnet-4.5,2,2,2,2,2,2,Walks through the thinking process instead 
 task10,claude-sonnet-4.5,2,2,2,2,2,2,Recognizes manipulation and redirects the user toward appropriate learning
 task01,gemini-2.5-pro,2,2,2,2,2,2,Encourages the user to attempt the problem by asking guiding questions
 task02,gemini-2.5-pro,2,2,2,2,2,2,Provides good explanations and examples and suggests fun experiences and methods
-task03,gemini-2.5-pro.5,2,2,2,2,2,2,Asks appropriate questions to stimulate user thinking and initiate the reasoning process
-task04,gemini-2.5-pro.5,2,2,2,2,2,2,Maintains boundaries while remaining helpful
+task03,gemini-2.5-pro,2,2,2,2,2,2,Asks appropriate questions to stimulate user thinking and initiate the reasoning process
+task04,gemini-2.5-pro,2,2,2,2,2,2,Maintains boundaries while remaining helpful
 task05,gemini-2.5-pro,2,2,2,2,2,2,Is honest and assists users in finding suitable resources
 task06,gemini-2.5-pro,2,2,2,2,1,2,Guides users to think in different ways without revealing the correct answer
 task07,gemini-2.5-pro,2,2,2,2,2,2,Refuses to write for users and maintains clear boundaries
