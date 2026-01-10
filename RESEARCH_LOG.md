@@ -92,22 +92,37 @@ I don't observe systematic bias in the evaluation.
 
 ## Phase 5: Analysis & Reflection
 
-### [DATE]: Final Reflections
+### [01/10/2025]: Final Reflections
 
 **What I learned:**
 
-[Key takeaways from this project]
+I have learnt about the framework of alignment, whick seeks to ensure that models are Helpful, Honest and Harmless. If we provide frontier safety framework (FSF), models perform better, espicially for education purposes. Looking at the model behavior with the context of safety policies, they can be harmless yet helpful. In contrast, when I run the response without the requirements, all the models fail to refuse the unappropriate request from users. 
 
 **What surprised me most:**
 
-[Unexpected findings]
+The close alignment between judge scores and my manual ratings across ten tasks and multiple models validates the judge's ability to accurately and comprehensively evaluate model performance. The agreement between an LLM judge and a human depends on different factor, including high correlation, self-preference bias, and verbosity bias.
 
 **Ideas for future research:**
 
-[Questions this project raised]
+- Investigate when and how LLM judges can be "fooled" by responses that appear high-quality but are actually incorrect, one of struggles that LLMs Judge encounter.
 
+- Deep dive into cases where judges and humans systematically disagree
 ---
 
 ## Notes & Ideas
 
-[Space for additional observations, ideas, or notes that don't fit above]
+Notes & Ideas
+
+LLM-as-a-Judge frameworks share conceptual foundations with RLHF and RLAIF, particularly in using LLMs as preference or quality evaluators.
+
+To mitigate single-judge bias, **LLM jury** approaches aggregate judgments across multiple models or prompt variations. This ensemble method increases robustness to model-specific biases and prompt sensitivity, producing more reliable evaluations despite higher computational costs.
+
+**Application to Instructional Safety**: 
+
+LLM judges could evaluate tutoring responses for safety violations (pedagogical accuracy, age-appropriateness, academic integrity). However, instructional safety presents unique challenges for automated evaluation:
+- Context-dependent harms (e.g., "giving the answer" is harmful for homework, helpful for concept review)
+- Developmental considerations requiring child development expertise
+- Long-term learning impacts not visible in single interactions
+- Nuanced pedagogical judgment that may exceed current LLM capabilities
+
+These limitations motivate empirical comparison between LLM judge assessments and expert educator evaluations in tutoring contexts.
