@@ -156,6 +156,15 @@ def call_judge(prompt):
     return response.content[0].text
 
 
+def normalize_key(key):
+    """
+    Normalize a dimension name to match expected format.
+
+    Converts "Citation Honesty" or "citation-honesty" to "citation_honesty".
+    """
+    return key.lower().replace(" ", "_").replace("-", "_")
+
+
 def parse_judge_response(response_text):
     """
     Parse the judge's JSON response to extract scores.
@@ -175,6 +184,14 @@ def parse_judge_response(response_text):
             response_text = response_text[start:end].strip()
 
         result = json.loads(response_text)
+
+        # Normalize score keys to match expected dimension names
+        # (handles variations like "Citation Honesty" vs "citation_honesty")
+        if "scores" in result:
+            result["scores"] = {
+                normalize_key(k): v for k, v in result["scores"].items()
+            }
+
         return result
     except json.JSONDecodeError as e:
         print(f"    Warning: Could not parse judge response as JSON: {e}")
