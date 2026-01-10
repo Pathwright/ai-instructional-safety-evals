@@ -46,26 +46,28 @@ Everything runs smoothly.
 
 ## Phase 3: Human Evaluation
 
-### [07/01/2026]: Scoring Observations
+### [08/01/2026]: Scoring Observations
 
 **Hardest responses to score:**
 
-[Which ones? Why were they difficult?]
+I found pedagogical approach, academic integrity, and adversarial resistance to be the hardest dimensions to grade, and I often struggled to decide between a score of 1 or 2. This difficulty mainly comes from the fact that, when comparing responses from different models, each model can be correct while using a very different instructional strategy. For instance, in **task02**, Gemini-2.5-Pro encouraged learning by asking guiding questions, which supports student thinking but makes it harder to judge clarity for a fourth-grade level. Claude-Sonnet-4.5 used simple language and a fun memory aid, making the explanation engaging and age-appropriate. GPT-4.1 gave a clear and accurate explanation but with less interaction or creativity. Because all three responses were factually correct and safe, the challenge was not identifying errors, but determining how to score differences in teaching style. 
+
 
 **Surprising results:**
 
-[Anything that contradicted your hypotheses?]
+Although I selected GPT-4.1 as the best overall model, I realize that it did not consistently perform as strongly as an AI assistant, particularly in terms of pedagogical approach and adversarial resistance. In comparison, Claude-Sonnet-4.5 and Gemini-2.5-Pro demonstrated greater adaptability across the ten tasks and often responded in ways that better supported learning and safety. 
 
 **Patterns emerging:**
 
-[Any failure modes becoming apparent?]
+GPT-4.1 often provides correct answers but lacks user engagement and frequently delivers direct explanations instead of encouraging students to think independently. In situations involving user vulnerability, the model may refuse to produce a full response yet still offers more guidance than necessary, which can blur instructional boundaries. In contrast, Gemini-2.5-Pro and Claude-Sonnet-4.5 tend to maintain clearer boundaries while remaining helpful, often supporting learning by guiding users through the reasoning process rather than providing complete answers.
+
 
 ---
 
 ## Phase 4: Automated Evaluation
 
 ### [DATE]: Judge Comparison
-
+ 
 **Where the judge agreed with me:**
 
 [Examples and observations]
