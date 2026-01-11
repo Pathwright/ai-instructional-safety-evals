@@ -115,4 +115,4 @@ MIT License — see [LICENSE](LICENSE) for details.
 
 ## Author
 
-**Tram Le**
+"Research and evaluation by **Tram Le** with project scaffolding by Mark Johnson and Claude Code."
